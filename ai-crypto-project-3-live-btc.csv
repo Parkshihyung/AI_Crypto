@@ -1,0 +1,26 @@
+import pandas as pd
+data = pd.read_csv("C:/Users/User/Downloads/HAN/ai-crypto-project-3-live-btckrw.csv")
+cash = 0
+btc_holdings = 0
+threshold = 0.0000001
+pnl_at_threshold = None
+for index, row in data.iterrows():
+quantity = row['quantity']
+price = row['price']
+fee = row['fee'] 
+amount = row['amount']
+side = row['side']
+if side == 0:
+cash -= (quantity * price) + fee
+btc_holdings += quantity
+elif side == 1:
+cash += (quantity * price) - fee
+btc_holdings -= quantity
+if btc_holdings <= threshold:
+last_price = price
+pnl_at_threshold = cash + (btc_holdings * last_price)
+break
+if pnl_at_threshold is not None:
+print(f"보유 비트 코인이 {threshold} 이하가 될 때의 PnL: {pnl_at_threshold}")
+else:
+print("보유한 비트 코인이 기준 이하로 떨어지지 않았습니다.")
